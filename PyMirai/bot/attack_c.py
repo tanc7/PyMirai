@@ -13,14 +13,14 @@ import rand.h.header
 import util.h.header
 import scanner.h.header
 
-attack_target = attack.h.header.attack_target
-attack_option = attack.h.header.attack_option
-attack_method = attack.h.header.attack_method
-attack_stomp_data = attack.h.header.attack_stomp_data
-attack_http_state = attack.h.header.attack_http_state
-attack_cfnull_state = attack.h.header.attack_cfnull_state
-add_attack = attack.h.header.add_attack
-free_opts = attack.h.header.free_opts
+attack_target = attack_h_header.attack_target
+attack_option = attack_h_header.attack_option
+attack_method = attack_h_header.attack_method
+attack_stomp_data = attack_h_header.attack_stomp_data
+attack_http_state = attack_h_header.attack_http_state
+attack_cfnull_state = attack_h_header.attack_cfnull_state
+add_attack = attack_h_header.add_attack
+free_opts = attack_h_header.free_opts
 
 methods_len = 0
 # struct attack_method **methods = NULL;attack_ongoing = (0)
@@ -203,7 +203,8 @@ def add_attack(attack_method.ATTACK_VECTOR, vector, ATTACK_FUNC(func)):
     methods = realloc(methods, (methods_len + 1) * sizeof (attack_method))
     methods[methods_len++] = method
 
-def free_opts(struct attack_option *opts, len):
+# def free_opts(struct attack_option *opts, len):
+def free_opts(attack_option(opts,len)):
 
     if opts == NULL:
         return

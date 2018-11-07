@@ -1,0 +1,21 @@
+ 2120  mkdir ctypesexperiment
+ 2121  cd ctypesexperiment/
+ 2122  ls
+ 2123  nano testlib.c
+ 2124  ls
+ 2125  gcc -shared -W1,-soname,testlib -o testlib.so -fPIC testlib.c
+ 2126  gcc -shared -Wl,-soname,testlib -o testlib.so -fPIC testlib.c
+ 2127  nano testlib.c
+ 2128  gcc -shared -Wl,-soname,testlib -o testlib.so -fPIC testlib.c
+ 2129  ls
+ 2130  nano testlibwrapper.py
+ 2131  python testlibwrapper.py 
+ 2132  nano testlibwrapper.py
+ 2133  python testlibwrapper.py 
+ 2134  ls $PWD *.so
+ 2135  ls /root/pymirai/PyMirai/bot/ctypesexperiment/testlib.so 
+ 2136  ls
+ 2137  nano testlibwrapper.py 
+ 2138  python testlibwrapper.py 
+ 2139  history
+

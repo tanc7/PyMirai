@@ -24,7 +24,8 @@ def util_strlen(str):
     return c
 
 
-BOOL util_strncmp(str1, str2, len)
+# BOOL util_strncmp(str1, str2, len)
+def util_strncmp(str1, str2, len):
     l1 = util_strlen(str1); l2 = util_strlen(str2)
 
     if l1 < len or l2 < len:
@@ -36,7 +37,8 @@ BOOL util_strncmp(str1, str2, len)
 
     return True
 
-BOOL util_strcmp(str1, str2)
+# BOOL util_strcmp(str1, str2)
+def util_strcmp(str1, str2):
     l1 = util_strlen(str1); l2 = util_strlen(str2)
 
     if l1 != l2:
@@ -90,7 +92,7 @@ def util_atoi(str, base):
 			c -= util_isupper(c) ? 'A' - 10 : 'a' - 10
 		else:
 			break
-            
+
 		if c >= base:
 			break
 
@@ -133,7 +135,7 @@ def util_itoa(value, radix, string):
             scratch[offset] = c
             accum /= radix
             offset -= 1
-        
+
         if neg:
             scratch[offset] = '-'
         else:
@@ -180,8 +182,10 @@ def util_stristr(haystack, haystack_len, str):
 
     return -1
 
-ipv4_t util_local_addr(void)
-    struct sockaddr_in addr
+# ipv4_t util_local_addr(void)
+ipv4_t(util_local_addr)
+    sockaddr_in(addr)
+    # struct sockaddr_in addr
     socklen_t addr_len = sizeof (addr)
 
     errno = 0
@@ -210,14 +214,14 @@ def util_fdgets(buffer, buffer_size, fd):
 
     return total == 0 ? NULL : buffer
 
-static inline util_isupper(c)
+def util_isupper(c):
     return (c >= 'A' and c <= 'Z')
 
-static inline util_isalpha(c)
+def util_isalpha(c):
     return ((c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z'))
 
-static inline util_isspace(c)
+def util_isspace(c):
     return (c == ' ' or c == '\t' or c == '\n' or c == '\12')
 
-static inline util_isdigit(c)
+def util_isdigit(c):
     return (c >= '0' and c <= '9')

