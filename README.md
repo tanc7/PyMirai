@@ -53,3 +53,9 @@ But thankfully, since Mirai is originally written in C, direct translation of th
 7. Replace the clumsy 20-word guessing queue with a more efficient and customizable wordlist of tens of thousands of credential attempts and simply read it into a list and iterate through it (the bot/worm carries this wordlist, which has a marginal impact on overall file size)
 8. Replace all C libraries with Python module equivalents
 9. Add first modulette: Auto-generate router-phishing pages. It has to copy the brand and logo of the router itself after identifying MAC addr vendor. The worm should spawn these phishing pages periodically and listen for a response (credentials entered) in order to pwn the router
+
+# Notes
+
+Scattered throughout the directories are a few README.md and NOTES.md files. These are just "journal entries" of my findings during the reverse engineering process. Also, it may contain helpful clues, such as how to use CTypes to directly call functions from the original code.
+
+I wrote these notes to document the code so I can come back to it later if I need it.
