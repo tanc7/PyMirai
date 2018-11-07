@@ -121,9 +121,9 @@ ATK_OPT_HTTPS	= 23  # Is this URL SSL/HTTPS?
 ATK_OPT_CONNS	= 24  # Number of sockets to use
 ATK_OPT_SOURCE	= 25  # Source IP
 
-struct attack_method {
-    ATTACK_FUNC func
-    ATTACK_VECTOR vector
+# struct attack_method {
+#     ATTACK_FUNC func
+#     ATTACK_VECTOR vector
 
 class attack_stomp_data(object):
     def __init__(self, addr, sport, dport):
@@ -136,9 +136,9 @@ class attack_stomp_data(object):
 
     def port_t(sport,dport):
         return
-struct attack_stomp_data {
-    ipv4_t addr
-    port_t sport, dport
+# struct attack_stomp_data {
+#     ipv4_t addr
+#     port_t sport, dport
 
 HTTP_CONN_INIT	= 0 # Inital state
 HTTP_CONN_RESTART	= 1 # Scheduled to restart connection next spin
@@ -201,7 +201,7 @@ class attack_cfnull_state(object):
         self.dst_addr = dst_addr
     def ipv4_t(dst_addr):
         return
-# 
+#
 # struct attack_cfnull_state {
 #     ipv4_t dst_addr
 
@@ -212,6 +212,23 @@ attack_init = True
 
 
 
+def add_attack(attack_method.ATTACK_VECTOR, vector, ATTACK_FUNC(func)):
+    # struct attack_method *method = calloc(1, sizeof (struct attack_method))
+    method = calloc(1, sizeof(attack_method))
+    attack_method(method)
+    method.vector = vector
+    method.func = func
 
-static add_attack(ATTACK_VECTOR, ATTACK_FUNC)
-static free_opts(struct attack_option *, int)
+    methods = realloc(methods, (methods_len + 1) * sizeof (attack_method))
+    methods[methods_len++] = method
+
+#def free_opts(struct attack_option *opts, len):
+def free_opts(attack_option(opts, len)):
+
+    if opts == NULL:
+        return
+
+    for i in range(len):
+        if opts[i].val != NULL:
+            free(opts[i].val)
+    free(opts)

