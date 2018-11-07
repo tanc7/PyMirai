@@ -1,3 +1,3 @@
-for cfile in $(ls *.c)
-	do ctopy < $cfile > $cfile.py
+for cfile in $(ls *.h)
+	do ctopy < $cfile > $cfile.header.py
 	done

