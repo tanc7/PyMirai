@@ -33,3 +33,15 @@ Because of that a notable amount of the code is still in it's native C language,
 Just because I cooked up together a Pythonic equivalent of the code, it is not reflective of my understanding of it and it may not work. Hence, the code must be revised and migrated into the higher-level programming environment of Python.
 
 But thankfully, since Mirai is originally written in C, direct translation of the code into Python should be fairly painless.
+
+# To Do List
+
+1. Convert C-header files (.h extensions) into compatible Pythonic libraries or modules that can be imported and utilized
+2. Convert all unknown functions into Pythonic equivalents
+3. Closely investigate syntax of Python-equivalent modules (for example to proper use the htons method, we need to create a simple function that does socket.htons(string) and returns it
+4. Readapt the file-descriptor method of opening files that the original botnet code was designed to do. Or consider keeping it for the sake of cross-platform compatibility (with pyinstaller, this version of Mirai would only work on Windows, Linux, and Mac, and no IoT devices)
+5. Properly identify all classes, functions, methods, data structures. For example, the "struct" syntax, followed by multiple variables and arguments to be declared in C strongly implies that it is a class.
+6. Solve the issue of being unable to (in Python 2.7) convert text into byte-arrays. Byte-arrays is the preferred method of format for transmitting credentials (brute-forcing) for the original Mirai bot
+7. Replace the clumsy 20-word guessing queue with a more efficient and customizable wordlist of tens of thousands of credential attempts and simply read it into a list and iterate through it (the bot/worm carries this wordlist, which has a marginal impact on overall file size)
+8. Replace all C libraries with Python module equivalents
+9. Add first modulette: Auto-generate router-phishing pages. It has to copy the brand and logo of the router itself after identifying MAC addr vendor. The worm should spawn these phishing pages periodically and listen for a response (credentials entered) in order to pwn the router
