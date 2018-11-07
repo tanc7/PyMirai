@@ -11,6 +11,14 @@ My reasons for reversing it into Python is simple
 3. To help propagate the increasing number of Mirai copycats and variants by giving it a better platform to code on (debatable I know, other candidates include Ruby on RAILS, Java, etc.)
 4. To add alternatives to the original botnet's C2 platform, that is, a alternative to Google GoLang, such as a Django-hosted server or something connected to a interactive JQuery/REACT Front-End to make it more usable to the end-user
 
+# Wishlist - Features to be implemented as a improvement
+
+1. Native HTTPS, SSL Support and DNS Resolution
+2. Ability to resolve Dynamic DNS Addresses instead of simple IPv4 public addresses, allowing reconfigurable VPS C2 servers to be deployed with different IP addresses that the malware can still reach
+3. Automated phishing campaigns against victim's machine in an effort to capture administrator login credentials to the router/switch
+4. Web GUI, analytics, metrics, warnings, integrated SIEM of a InsightIDR-like format
+5. Support for 10,000-line wordlists instead of 20 Most Commonly Used Passwords
+6. C2 Cyber-Threat Analysis Detection and Early Warning System. Parses your Apache/Nginx Access logs for suspicious requests from places like 'malware-hunter.shodan.io'. Immediately warns user via email to break down the server and scoot!
 
 # As of right now a incomplete project
 
